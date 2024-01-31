@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)*iu1h2!cn$mq1at(i-n$z*8s2@_iu5&yr%dz)hr_d=xtd@t(x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('env') == 'DEV':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #Local Apps
+    'user.apps.UserConfig',
+    'CRM'
 ]
 
 MIDDLEWARE = [
@@ -73,14 +80,31 @@ WSGI_APPLICATION = 'Novamaco.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'novamacro_dev',
+        'USER': 'doadmin',
+        'PASSWORD': 'ydi1v6xzjfadvs6m',
+        'HOST': 'db-postgresql-nyc1-41364-do-user-6170808-0.db.ondigitalocean.com',
+        'PORT': '25060'
     }
 }
+"""
+DATABASES = {'
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('dbName'),
+        'USER': os.environ.get('dbUser'),
+        'PASSWORD': os.environ.get('dbPassword'),
+        'HOST': os.environ.get('dbHost'),
+        'PORT': os.environ.get('dbPort')
+    }
+}
+"""
+# Auth User Model
 
+AUTH_USER_MODEL = 'user.Users'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -100,6 +124,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Login Redirect
+
+LOGIN_REDIRECT_URL = '/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -117,6 +144,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+if os.environ.get('env') != 'DEV':
+    STATIC_ROOT = os.path
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
