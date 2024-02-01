@@ -315,7 +315,7 @@ button,
   background-color: #dddddd;
 }
 .w-form-fail {
-  display: none;
+  display: inline-block;
   margin-top: 10px;
   padding: 10px;
   background-color: #ffdede;
